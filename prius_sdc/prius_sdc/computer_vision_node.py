@@ -1,5 +1,5 @@
 import cv2
-import numpy as np
+from numpy import interp
 import os
 
 from .config import config
@@ -8,6 +8,7 @@ from .Detection.Signs.SignDetectionApi import detect_Signs
 from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
 from .Control.special import Drive_Car
 
+from geometry_msgs.msg import Twist
 from rclpy.node import Node 
 from cv_bridge import CvBridge 
 from sensor_msgs.msg import Image 
@@ -17,17 +18,24 @@ import rclpy
 
 class Video_feed_in(Node):
     def __init__(self):
-        super().__init__('video_subscriber')
-        self.subscriber = self.create_subscription(Image,'/camera1/image_raw',self.process_data,10)
-        self.bridge = CvBridge() # converting ros images to opencv data
-        self.self.prev_Mode = "Detection"
-        self.self.Left_turn_iterations = 0
-        self.self.Frozen_Curvature=0
-        self.self.Frozen_Curvature=0
 
+        super().__init__('video_subscriber')
+        self.subscriber = self.create_subscription(Image,'/camera/image_raw',self.process_data,10)
+        self.publisher = self.create_publisher(Twist, '/cmd_vel', 40)
+        timer_period = 0.5;self.timer = self.create_timer(timer_period, self.send_cmd_vel)
+
+        self.velocity=Twist()
+        self.bridge = CvBridge() # converting ros images to opencv data
+        self.prev_Mode = "Detection"
+        self.Left_turn_iterations = 0
+        self.Frozen_Curvature=0
+        self.Frozen_Curvature=0
+
+    def send_cmd_vel(self):
+        self.publisher.publish(self.velocity)
         
     def process_data(self, data): 
-        frame = self.bridge.imgmsg_to_cv2(data) # performing conversion
+        frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
         img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
@@ -58,7 +66,11 @@ class Video_feed_in(Node):
                 Curvature = self.Frozen_Curvature
         Current_State = [distance, Curvature , img , Mode , Tracked_class]
         a,b=Drive_Car(Current_State)
-        print("Angle ",a," Speed" , b)
+        a=interp(a,[30,120],[0.5,-0.5])
+        b=interp(b,[50,90],[1,2])
+        print("\n\nA = ",a,"   B = ", b,"\n\n")
+        self.velocity.linear.x =b
+        self.velocity.angular.z=a
         cv2.imshow("Frame",img)
         cv2.waitKey(1)
         
