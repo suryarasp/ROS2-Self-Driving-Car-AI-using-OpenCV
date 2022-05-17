@@ -6,7 +6,7 @@ sudo apt install -y python3-venv
 python3 -m venv ROS2SDC_VENV
 # Activate Virtaul Environment
 source ROS2SDC_VENV/bin/activate
-# Install neccesary python modules
+# change dir to ROS2-self  and Install neccesary python modules
 pip3 install -r Repo_resources/installation_requirements_python.txt
 
 ############################ Installing Dependencies (Not mentioned in the video lecture ) #######################################
