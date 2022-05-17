@@ -31,8 +31,11 @@ source ROS2SDC_VENV/bin/activate
 # Source *your Workspace* in any terminal you open to Run files from this workspace
 source /home/haiderabbasi/Development/HAD_LUQ/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 source /opt/ros/foxy/setup.bash
+pip3 install pyyaml
+ pip3 install lark-parser
 
 ## once build you can run the simulation e.g [ ros2 launch (package_name) world(launch file) ] 
+ cd ROS2-Self-Driving-Car-AI-using-OpenCV/
 ros2 launch self_driving_car_pkg world_gazebo.launch.py
 
 ## To activate the SelfDriving Car
