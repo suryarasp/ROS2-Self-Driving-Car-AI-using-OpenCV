@@ -41,3 +41,5 @@ ros2 launch self_driving_car_pkg world_gazebo.launch.py
 
 ## To activate the SelfDriving Car
 ros2 run self_driving_car_pkg computer_vision_node 
+## if you are facing the problem with CV_bridge 
+https://github.com/ros-perception/vision_opencv/tree/ros2/cv_bridge
