@@ -19,7 +19,7 @@ sudo apt install -y ros-foxy-gazebo-ros-pkgs
 # Bring all models into your .gazebo/models
 
 cp -r self_driving_car_pkg/models/* ~/.gazebo/models
-#Build repo
+#Build repo from ROS2-Se---Opencv
 colcon build
 
 ############################################# RUNNING THE PROJECT #######################################################################
